@@ -1,40 +1,32 @@
-import { useState } from 'react'
-import './App.css'
-import ProductCard from './Components/ProductCard'
+// src/App.jsx
+import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { ThemeProvider } from './Context/ThemeContext';
+import { CartProvider } from './Context/CartContext';
+import { AuthProvider } from './Context/AuthContext'; 
+import Home from './Pages/Home';
+import Cart from './Pages/Cart';
+import Login from './Pages/Login';
+import Layout from './Components/Layout';
 
 function App() {
-
   return (
-    <>
-      <h1 className='mb-5 text-[#DB3D5D] text-center text-3xl font-bold'>магазин</h1>
-      <div className='flex justify-around'>
-        <ProductCard 
-          name="кот летчик"
-          price={99990}
-          image="https://i.pinimg.com/736x/94/72/a6/9472a684b59485064cd128c718313a86.jpg"
-        />
-
-        <ProductCard
-          name="кот"
-          price={129990}
-          image="https://i.pinimg.com/736x/fe/6b/4b/fe6b4b70f20c5cfa8cb044dba40c64c4.jpg"
-        />
-
-        <ProductCard
-          name="AirPods Pro"
-          price={24990}
-          image="https://i.pinimg.com/1200x/59/6a/8c/596a8c850ede6cebe88c510ddb8cfead.jpg"
-        />
-        <ProductCard
-          name="AirPods mini"
-          price={50090}
-          image="https://i.pinimg.com/736x/07/c0/66/07c066bbc5d502ef6ad81e65377e9ce4.jpg"
-        />
-      </div>
-      
-    
-    </>
-  )
+    <ThemeProvider>
+      <CartProvider>
+        <AuthProvider> 
+          <BrowserRouter>
+            <Routes>
+              <Route element={<Layout />}>
+                <Route path="/" element={<Home />} />
+                <Route path="/cart" element={<Cart />} />
+                <Route path="/login" element={<Login />} />
+              </Route>
+            </Routes>
+          </BrowserRouter>
+        </AuthProvider>
+      </CartProvider>
+    </ThemeProvider>
+  );
 }
 
-export default App
+export default App;

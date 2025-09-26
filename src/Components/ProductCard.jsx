@@ -1,44 +1,38 @@
-import React, {useState} from "react";
+import React from 'react';
+import { useContext } from 'react';
+import { CartContext } from '../Context/CartContext';
+import { useNavigate } from 'react-router-dom';
+import { ThemeContext } from '../Context/ThemeContext';
+import { AuthContext } from '../Context/AuthContext'; 
 
-function ProductCard ({name, price, image}) {
-    
-    const [count, setCount] = useState(0);
+function ProductCard({ name, price, image, id }) {
+  const { addToCart } = useContext(CartContext);
+  const { theme } = useContext(ThemeContext);
+  const { isAuth } = useContext(AuthContext); 
+  const navigate = useNavigate();
 
-    const handleAddToCard = () => {
-        setCount(count + 1);
-    };
-    const handleMinusToCard = () => {
-        if (count > 0){
-            setCount(count - 1);
-        }
-        
-    };
+  const handleAddToCart = () => {
+    addToCart({ id, name, price, image });
+    if (isAuth) {
+      navigate('/cart');
+    } else {
+      navigate('/login'); 
+    }
+  };
 
-    return(
-        <div className="inline-flex flex-col border-4 border-dashed border-[#e86781] rounded-lg w-auto mb-3 mr-3 px-2 py-3 ">
-            <img className="w-72 h-72 object-cover rounded" src={image} alt={name} />
-            <h1 className="font-bold text-[#926870]">{name}</h1>
-            <p className="font-bold text-[#926870]">{price} ₽</p>
-            <p className=" text-[#926870]">В корзине: {count}</p> 
-            
-            <div className="flex justify-between">
-                <button className=" bg-[#DB3D5D] rounded-md text-white p-2" onClick={handleAddToCard}>
-                    Добавить в корзину
-                </button>
-                <div>
-                    <button className="w-10 h-10 border-2 border-[#DB3D5D] rounded-[100%] text-[#DB3D5D] p-2 font-bold" onClick={handleMinusToCard}>
-                        -
-                    </button>
-                    <button className=" w-10 h-10 border-2 border-[#DB3D5D] rounded-[100%] text-[#DB3D5D] p-2 font-bold" onClick={handleAddToCard}>
-                        +
-                    </button>
-                </div>
-                
-            </div>
-            
-
-        </div>
-    );
+  return (
+    <div className={`border-4 border-dashed border-pink-500 rounded-lg p-4 mb-2 mr-2 w-72 flex flex-col gap-3 transition-colors duration-300
+        ${theme === 'dark' ? 'bg-[#1e1e1e] text-white' : 'bg-[#f9f9f9] text-black'}`}>
+      <img className="w-72 h-72 object-cover rounded-md" src={image} alt={name}/>
+      <h1 className="text-xl font-semibold">{name}</h1>
+      <p className="text-lg">{price} ₽</p>
+      <button
+        onClick={handleAddToCart}
+        className="bg-[#9747FF] hover:bg-[#af3cd9] text-white font-medium py-2 px-4 rounded transition-colors duration-200">
+        В корзину
+      </button>
+    </div>
+  );
 }
 
 export default ProductCard;
